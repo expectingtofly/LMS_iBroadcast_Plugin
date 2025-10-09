@@ -1,0 +1,6 @@
+PLUGIN_IBROADCAST
+	EN	iBroadcast
+
+PLUGIN_IBROADCAST_DESC
+	EN	iBroadcast online personal music library integration
+	

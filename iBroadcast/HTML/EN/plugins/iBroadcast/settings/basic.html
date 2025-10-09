@@ -1,0 +1,88 @@
+
+<style>
+  .brand-light, .brand-dark {
+    display: none;    
+  }
+</style>
+[% PROCESS settings/header.html %]	
+	[% IF isSignedIn %]
+	<strong>You are currently signed in, you can sign out by pressing the button below :</strong>
+	<br/>
+	<input name="signout" type="submit" value="Sign Out" class="stdclick" />
+	<br/>
+	
+	[% END %]
+	[% IF isSignedOut %]
+		Enter a iBroadcast App ID and login token on your iBroadcast to authorise the plugin:<br/>    
+	
+		[% WRAPPER setting title="App ID" desc="IBroadcast App ID" %]
+		<div class="prefDesc">
+			<input type="text" class="stdedit" name="pref_appid" value="[% prefs.appid %]" size="40" />	
+		</div>
+		[% END %]
+		
+		
+		[% WRAPPER setting title="Token" desc="IBroadcast App Token" %]
+		<div class="prefDesc">
+			<input type="text" class="stdedit" name="pref_token" value="[% prefs.token %]" size="40" />	
+		</div>
+		[% END %]
+				
+		<br/>		
+		<script type="text/javascript"> 
+			function bschangeText(submitId){
+				var submit = document.getElementById(submitId);
+				submit.value = 'Please wait...';
+				return true;
+			};		
+		</script>
+		[% IF useExtJS || useAJAX %]
+			<input name="signin" type="submit" value="Sign In" class="stdclick" id="btnsignin" onclick="return bschangeText('btnsignin');" />
+		[% ELSE %]
+			<input name="signin" type="submit" value="Sign In" class="stdclick" />
+		[% END %]
+		<br/>
+
+	
+	[% END %]
+
+	
+
+<!-- Branding images -->
+<img src="[% webroot %]plugins/iBroadcast/html/images/ibroadcast-light-compact-powered.png" class="brand-light" alt="Light logo">
+<img src="[% webroot %]plugins/iBroadcast/html/images/ibroadcast-dark-compact-powered.png" class="brand-dark" alt="Dark logo">
+
+  <script>
+  window.addEventListener('load', () => {
+    const light = document.querySelector('.brand-light');
+    const dark  = document.querySelector('.brand-dark');
+
+    try {
+      const parentDoc = window.parent.document;
+      // ✅ Simply check if *any* element in the parent has theme--dark
+      const isDark = parentDoc.querySelector('[class*="theme--dark"]') !== null;
+
+      console.log("Detected dark mode:", isDark);
+
+      light.style.display = isDark ? 'none' : 'block';
+      dark.style.display  = isDark ? 'block' : 'none';
+    } catch (e) {
+      console.warn('Could not access parent. Defaulting to light.');
+      light.style.display = 'block';
+    }
+  });
+  </script>
+
+  <hr/>	
+
+  	[% WRAPPER setting title="Streaming Bitrate" desc="You will need an iBroadcast premium account to stream higher than 128 kbps" %]
+	<select class="stdedit" name="pref_bitrate" id="pref_bitrate">			
+				<option [% IF prefs.pref_bitrate == '96' %]selected [% END %]value="96">96 kbps</option>
+				<option [% IF prefs.pref_bitrate == '128' %]selected [% END %]value="128">128 kbps</option>
+				<option [% IF prefs.pref_bitrate == '256' %]selected [% END %]value="256">256 kbps</option>
+				<option [% IF prefs.pref_bitrate == '320' %]selected [% END %]value="320">320 kbps</option>			
+				<option [% IF prefs.pref_bitrate == 'orig' %]selected [% END %]value="orig">Original Quality</option>			
+	</select>
+	[% END %]
+
+[% PROCESS settings/footer.html %]

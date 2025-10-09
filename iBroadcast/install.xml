@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<extension>
+  <name>PLUGIN_IBROADCAST</name>
+  <module>Plugins::iBroadcast::Plugin</module>
+  <importmodule>Plugins::iBroadcast::Importer</importmodule>
+  <onlineLibrary>true</onlineLibrary>
+  <version>0.0.1</version>
+  <description>PLUGIN_IBROADCAST_DESC</description>
+  <creator>ExpectingToFly</creator>
+  <homepageURL>https://github.com/expectingtofly/LMS_iBroadcastPlugin</homepageURL>
+  <icon>plugins/iBroadcast/html/images/iBroadcast.png</icon>
+  <defaultState>enabled</defaultState>
+  <targetApplication>
+    <id>SlimServer</id>
+    <minVersion>8.1</minVersion>
+    <maxVersion>*</maxVersion>
+  </targetApplication>
+  <optionsURL>plugins/iBroadcast/settings/basic.html</optionsURL>
+</extension>
