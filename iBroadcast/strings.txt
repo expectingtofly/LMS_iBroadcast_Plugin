@@ -1,6 +1,76 @@
 PLUGIN_IBROADCAST
-	EN	iBroadcast
+	EN	iBroadcast	
 
 PLUGIN_IBROADCAST_DESC
 	EN	iBroadcast online personal music library integration
+	FR	Intégration de la bibliothèque musicale personnelle en ligne iBroadcast
+	DE	Integration der persönlichen Online-Musikbibliothek iBroadcast
+	ES	Integración de la biblioteca musical personal en línea iBroadcast
+	IT	Integrazione della libreria musicale personale online iBroadcast
+
+PLUGIN_IBROADCAST_CURRENTLY_SIGNED_IN_MESSAGE
+	EN	You are currently signed in, you can sign out by pressing the button below
+	FR	Vous êtes actuellement connecté, vous pouvez vous déconnecter en appuyant sur le bouton ci-dessous
+	DE	Sie sind derzeit angemeldet, Sie können sich über die Schaltfläche unten abmelden
+	ES	Actualmente has iniciado sesión, puedes cerrar sesión pulsando el botón de abajo
+	IT	Sei attualmente connesso, puoi disconnetterti premendo il pulsante qui sotto
+
+PLUGIN_IBROADCAST_NOT_SIGNED_IN_MESSAGE
+	EN	Enter an iBroadcast App ID and login token on your iBroadcast to authorise the plugin
+	FR	Saisissez un identifiant d’application iBroadcast et un jeton de connexion dans votre iBroadcast pour autoriser le plugin
+	DE	Geben Sie eine iBroadcast-App-ID und ein Anmeldetoken in Ihrem iBroadcast ein, um das Plugin zu autorisieren
+	ES	Introduce un ID de aplicación de iBroadcast y un token de inicio de sesión en tu iBroadcast para autorizar el plugin
+	IT	Inserisci un ID applicazione iBroadcast e un token di accesso nel tuo iBroadcast per autorizzare il plugin
+
+PLUGIN_IBROADCAST_SIGN_IN_PROMPT
+	EN	Enter an iBroadcast App ID and login token on your iBroadcast to authorise the plugin
+	FR	Saisissez un identifiant d’application iBroadcast et un jeton de connexion dans votre iBroadcast pour autoriser le plugin
+	DE	Geben Sie eine iBroadcast-App-ID und ein Anmeldetoken in Ihrem iBroadcast ein, um das Plugin zu autorisieren
+	ES	Introduce un ID de aplicación de iBroadcast y un token de inicio de sesión en tu iBroadcast para autorizar el plugin
+	IT	Inserisci un ID applicazione iBroadcast e un token di accesso nel tuo iBroadcast per autorizzare il plugin
+
+PLUGIN_IBROADCAST_TOKEN
+	EN	Token	
+
+PLUGIN_IBROADCAST_APP_TOKEN_DESCRIPTION
+	EN	iBroadcast App Token
+	FR	Jeton d’application iBroadcast
+	DE	iBroadcast-App-Token
+	ES	Token de aplicación iBroadcast
+	IT	Token dell’app iBroadcast
+
+PLUGIN_IBROADCAST_APP_ID
+	EN	App ID	
+
+PLUGIN_IBROADCAST_APP_ID_DESCRIPTION
+	EN	iBroadcast App ID	
+
+PLUGIN_IBROADCAST_ORIGINAL_QUALITY
+	EN	Original quality
+	FR	Qualité originale
+	DE	Originalqualität
+	ES	Calidad original
+	IT	Qualità originale
+
+PLUGIN_IBROADCAST_STREAMING_BITRATE
+	EN	Streaming Bitrate
+	FR	Débit binaire du flux
+	DE	Streaming-Bitrate
+	ES	Tasa de bits de transmisión
+	IT	Bitrate di streaming
+
+PLUGIN_IBROADCAST_BITRATE_MESSAGE
+	EN	You will need an iBroadcast premium account to stream higher than 128 kbps
+	FR	Vous aurez besoin d’un compte iBroadcast Premium pour diffuser à plus de 128 kbps
+	DE	Sie benötigen ein iBroadcast-Premium-Konto, um mit mehr als 128 kbps zu streamen
+	ES	Necesitas una cuenta iBroadcast Premium para transmitir por encima de 128 kbps
+	IT	È necessario un account iBroadcast Premium per lo streaming oltre 128 kbps
+
+PLUGIN_IBROADCAST_UNKNOWN_ALBUM
+	EN	Unknown Album
+	FR	Album inconnu
+	DE	Unbekanntes Album
+	ES	Álbum desconocido
+	IT	Album sconosciuto
+
 	

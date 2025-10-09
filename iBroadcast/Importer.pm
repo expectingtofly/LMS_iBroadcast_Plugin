@@ -153,7 +153,7 @@ sub scanAlbum {
 
 	main::INFOLOG && $log->is_info && $log->info("Reading tracks...");	
 
-	$progress->update($album->[$albumMap->{name}] || 'Unknown Album');
+	$progress->update($album->[$albumMap->{name}] || string('PLUGIN_IBROADCAST_UNKNOWN_ALBUM'));
 
 	my $preparedTracks = [];	
 	

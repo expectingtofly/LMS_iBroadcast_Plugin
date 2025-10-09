@@ -6,14 +6,14 @@
 </style>
 [% PROCESS settings/header.html %]	
 	[% IF isSignedIn %]
-	<strong>You are currently signed in, you can sign out by pressing the button below :</strong>
+	<strong>[% "PLUGIN_IBROADCAST_CURRENTLY_SIGNED_IN_MESSAGE" | string %] :</strong>
 	<br/>
 	<input name="signout" type="submit" value="Sign Out" class="stdclick" />
 	<br/>
 	
 	[% END %]
 	[% IF isSignedOut %]
-		Enter a iBroadcast App ID and login token on your iBroadcast to authorise the plugin:<br/>    
+		[% "PLUGIN_IBROADCAST_SIGN_IN_PROMPT" | string %]:<br/>    
 	
 		[% WRAPPER setting title="App ID" desc="IBroadcast App ID" %]
 		<div class="prefDesc">
@@ -22,7 +22,7 @@
 		[% END %]
 		
 		
-		[% WRAPPER setting title="Token" desc="IBroadcast App Token" %]
+		[% WRAPPER setting title="PLUGIN_IBROADCAST_TOKEN" desc="PLUGIN_IBROADCAST_APP_TOKEN_DESCRIPTION" %]
 		<div class="prefDesc">
 			<input type="text" class="stdedit" name="pref_token" value="[% prefs.token %]" size="40" />	
 		</div>
@@ -75,13 +75,13 @@
 
   <hr/>	
 
-  	[% WRAPPER setting title="Streaming Bitrate" desc="You will need an iBroadcast premium account to stream higher than 128 kbps" %]
+  	[% WRAPPER setting title="PLUGIN_IBROADCAST_STREAMING_BITRATE" desc="PLUGIN_IBROADCAST_BITRATE_MESSAGE" %]
 	<select class="stdedit" name="pref_bitrate" id="pref_bitrate">			
 				<option [% IF prefs.pref_bitrate == '96' %]selected [% END %]value="96">96 kbps</option>
 				<option [% IF prefs.pref_bitrate == '128' %]selected [% END %]value="128">128 kbps</option>
 				<option [% IF prefs.pref_bitrate == '256' %]selected [% END %]value="256">256 kbps</option>
 				<option [% IF prefs.pref_bitrate == '320' %]selected [% END %]value="320">320 kbps</option>			
-				<option [% IF prefs.pref_bitrate == 'orig' %]selected [% END %]value="orig">Original Quality</option>			
+				<option [% IF prefs.pref_bitrate == 'orig' %]selected [% END %]value="orig">[% "PLUGIN_IBROADCAST_ORIGINAL_QUALITY" | string %]</option>			
 	</select>
 	[% END %]
 
