@@ -62,6 +62,14 @@ sub new {
 	return $class->SUPER::new( $args );
 }
 
+sub audioScrobblerSource { 'P' }
+
+sub formatOverride {
+	my ($class, $song) = @_;
+	#just return mp3 for now
+	return 'mp3';
+}
+
 sub onStream {
 	my ($self, $client, $song) = @_;
 
