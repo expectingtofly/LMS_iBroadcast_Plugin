@@ -25,10 +25,8 @@
 		[% WRAPPER setting title="PLUGIN_IBROADCAST_TOKEN" desc="PLUGIN_IBROADCAST_APP_TOKEN_DESCRIPTION" %]
 		<div class="prefDesc">
 			<input type="text" class="stdedit" name="pref_token" value="[% prefs.token %]" size="40" />	
-		</div>
-		[% END %]
+		
 				
-		<br/>		
 		<script type="text/javascript"> 
 			function bschangeText(submitId){
 				var submit = document.getElementById(submitId);
@@ -41,6 +39,8 @@
 		[% ELSE %]
 			<input name="signin" type="submit" value="Sign In" class="stdclick" />
 		[% END %]
+		</div>
+		[% END %]				
 		<br/>
 
 	
