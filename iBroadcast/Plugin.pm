@@ -71,7 +71,7 @@ sub initPlugin {
 	Slim::Music::Import->addImporter('Plugins::iBroadcast::Importer', { use => 1 });
 
 	Slim::Player::ProtocolHandlers->registerHandler('ibcst', 'Plugins::iBroadcast::ProtocolHandler');
-	Slim::Plugin::OnlineLibrary::Plugin->addLibraryIconProvider('ibroadcast', '/plugins/iBroadcast/html/images/ibroadcast.png');
+	Slim::Plugin::OnlineLibrary::Plugin->addLibraryIconProvider('ibcst', '/plugins/iBroadcast/html/images/iBroadcastIcon.png');
 
 
 	return;
