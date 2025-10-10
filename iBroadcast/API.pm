@@ -186,7 +186,6 @@ sub statusHistoryRecord {
             my $JSON = decode_json ${ $http->contentRef };
 
             if ( $JSON->{result}) {
-                $log->warn(Dumper($JSON));   
                 main::DEBUGLOG && $log->is_debug && $log->debug('library status retrieved with history');
                 $cbY->($JSON);
                 return;
