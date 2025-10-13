@@ -55,7 +55,7 @@ sub startScan {
 
 		my $lastmodified = $library->{status}->{lastmodified};
 		main::DEBUGLOG && $log->is_debug && $log->debug("Library last modified: " . ($lastmodified || 'never'));
-		$cache->set( 'libraryupdated', $lastmodified, 77776000 ); # 90 days
+		$cache->set( 'ibcst_libraryupdated', $lastmodified, 86400 *30 ); # 30 days
 
 	} else {
 		
@@ -247,7 +247,7 @@ sub needsUpdate {
     Plugins::iBroadcast::API::getLibraryStatus(
         sub {
             my $JSON=shift;
-            my $lastupdated = $cache->get('libraryupdated');;
+            my $lastupdated = $cache->get('ibcst_libraryupdated');
             my $updated = $JSON->{status}->{lastmodified} || 0;
 			
 			main::DEBUGLOG && $log->is_debug && $log->debug("Library last updated: " . ($lastupdated || 'never') . ", current: " . ($updated || 'unknown'));
