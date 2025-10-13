@@ -42,9 +42,12 @@ sub scanUrl {
 			# use the scanned track to get streamable url, ignore scanned title and coverart
 			$song->streamUrl($track->url);
 			
-			my $bitrate = $track->bitrate();
-			main::DEBUGLOG && $log->is_debug && $log->debug("bitrate is : $bitrate");							
-			$song->bitrate($bitrate);	
+			my $format = $track->content_type;			
+			$song->pluginData('format', $format);			
+
+			my $bitrate = $track->bitrate();			
+			$song->bitrate($bitrate);
+			main::DEBUGLOG && $log->is_debug && $log->debug("bitrate is : $bitrate format :  $format");							
 			
 			# reset track's url - from now on all $url-based requests will refer to that track
 			$track->url($url);
@@ -69,7 +72,8 @@ sub audioScrobblerSource { 'P' }
 sub formatOverride {
 	my ($class, $song) = @_;
 	#just return mp3 for now
-	return 'mp3';
+	my $format = $song->pluginData('format');
+	return $format;
 }
 
 sub onStream {
