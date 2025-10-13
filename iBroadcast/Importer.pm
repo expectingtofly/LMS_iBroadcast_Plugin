@@ -51,6 +51,8 @@ sub startScan {
 
 		$class->scanArtists($library);
 		
+		$class->deleteRemovedTracks();
+
 		my $lastmodified = $library->{status}->{lastmodified};
 		main::DEBUGLOG && $log->is_debug && $log->debug("Library last modified: " . ($lastmodified || 'never'));
 		$cache->set( 'libraryupdated', $lastmodified, 77776000 ); # 90 days
