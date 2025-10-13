@@ -15,12 +15,14 @@ use Slim::Utils::Log;
 use Slim::Utils::Prefs;
 use Slim::Utils::Cache;
 
+use Data::Dumper;
+
 use Plugins::iBroadcast::API;
 
 my $log   = logger('plugin.ibroadcast');
 my $prefs = preferences('plugin.ibroadcast');
 
-
+use constant CAN_GETOBJECTFORURL => (Slim::Utils::Versions->compareVersions($::VERSION, '9.1.0') >= 0);
 
 # remove podcast:// protocol to scan real url
 sub scanUrl {
@@ -95,6 +97,56 @@ sub onStream {
 	
 }
 
+sub getMetadataFor {
+	my ( $class, $client, $url, undef, $song ) = @_;
+
+	my $meta;
+
+	if ( $client && ($song ||= $client->currentSongForUrl($url)) ) {
+		#The metadata might already be on the song
+		if ( $meta = $song->pluginData('meta') ) {
+			main::DEBUGLOG && $log->is_debug && $log->debug("Returning meta data from song");
+			return $meta;
+		}
+	}
+
+	my $track;
+	if (CAN_GETOBJECTFORURL) {# if LMS is version is < 9.1 we can call objectForUrl, if not we have to be naughty and bypass it.
+		main::DEBUGLOG && $log->is_debug && $log->debug("Getting track from objectForUrl");
+		$track = Slim::Schema->libraryObjectForUrl($url);
+	} else {
+		main::DEBUGLOG && $log->is_debug && $log->debug("Getting track directly from _retreiveTrack");
+		$track = Slim::Schema->_retrieveTrack($url,0,1);
+	}
+
+	if ($track) {
+		$meta = {
+				artist => $track->artistName,
+				album  => $track->album->title,
+				title  => $track->title,				
+				duration => $track->secs,
+				secs   => $track->secs,
+				cover  => $track->cover,
+				tracknum => $track->tracknum,
+				year => $track->year,
+				type => 'ibcst',
+		};
+	} else { 
+		main::DEBUGLOG && $log->is_debug && $log->debug("Track not available adding some kind of meta");
+		$meta = {				
+				title  => $url,	
+				type => 'ibcst',							
+		};		
+	}
+
+	main::DEBUGLOG && $log->is_debug && $log->debug(Dumper($meta));
+	if ( $client && ($song ||= $client->currentSongForUrl($url)) ) {
+		main::DEBUGLOG && $log->is_debug && $log->debug("Adding meta data to song");
+		$song->pluginData('meta', $meta);
+	}
+	return $meta;
+}
+
 
 sub _resolveUrl {
 	my ($url) = @_;	
@@ -138,6 +190,7 @@ sub _addbitrate {
 
 	return $url;
 }
+
 
 sub _getTrackIDFromUrl {
 	my ($url) = @_;
