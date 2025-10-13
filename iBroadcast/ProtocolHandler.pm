@@ -111,8 +111,8 @@ sub getMetadataFor {
 	}
 
 	my $track;
-	if (CAN_GETOBJECTFORURL) {# if LMS is version is < 9.1 we can call objectForUrl, if not we have to be naughty and bypass it.
-		main::DEBUGLOG && $log->is_debug && $log->debug("Getting track from objectForUrl");
+	if (CAN_GETOBJECTFORURL) {# if LMS is version is < 9.1 we can call libraryObjectForUrl, if not we have to be naughty and bypass it.
+		main::DEBUGLOG && $log->is_debug && $log->debug("Getting track from libraryObjectForUrl");
 		$track = Slim::Schema->libraryObjectForUrl($url);
 	} else {
 		main::DEBUGLOG && $log->is_debug && $log->debug("Getting track directly from _retreiveTrack");
