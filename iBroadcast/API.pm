@@ -131,8 +131,7 @@ sub getLibrarySync {
     );
 
     if ( $result->is_success ) {        
-       my $JSON = decode_json ${ $result->contentRef };
-       $log->warn(Dumper($JSON));   
+       my $JSON = decode_json ${ $result->contentRef };       
        return $JSON;
     } else {
          $log->error("Error getting library");
