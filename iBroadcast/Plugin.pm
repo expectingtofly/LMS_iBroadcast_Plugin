@@ -30,6 +30,7 @@ use Slim::Utils::Prefs;
 
 use Plugins::iBroadcast::Importer;
 use Plugins::iBroadcast::ProtocolHandler;
+use Plugins::iBroadcast::API;
 
 
 use Data::Dumper;
@@ -79,10 +80,27 @@ sub initPlugin {
 
 sub postinitPlugin {
 	my $class = shift;
-
 	main::DEBUGLOG && $log->is_debug && $log->debug('postinitPlugin() called');
-
 	
+	#Check Authentication
+
+	if ( $prefs->get('usertoken') ){
+		Plugins::iBroadcast::API::getUserStatus(
+			sub {
+				my $JSON = shift;
+				checkAuthenticated($JSON,
+				sub {
+					main::DEBUGLOG && $log->is_debug && $log->debug('authenticated');
+				},
+				sub {
+					main::DEBUGLOG && $log->is_debug && $log->debug('Not authenticated');
+				});
+			},
+			sub {
+				$log->warn('Failed to get user status');
+			}
+		);
+	}
 }
 
 sub getDisplayName { return 'PLUGIN_IBROADCAST'; }
@@ -99,6 +117,35 @@ sub onlineLibraryNeedsUpdate {
 sub getLibraryStats { 	
 	my $totals = Plugins::iBroadcast::Importer->getLibraryStats();
 	return wantarray ? ('PLUGIN_IBROADCAST_NAME', $totals) : $totals;
+}
+
+sub checkAuthenticated {
+	my $JSON = shift;
+	my $cbY = shift;
+	my $cbN = shift;
+	
+	if ($JSON->{authenticated}) {
+		main::DEBUGLOG && $log->is_debug && $log->debug('authenticated');
+		$cbY->();
+	} else {
+		$log->warn('Not Authenticated, invalid token,  will need to sign in');
+		$prefs->set('usertoken', undef );
+		my $apptoken = $prefs->get('apptoken');
+		if ($apptoken)	{
+			Plugins::iBroadcast::API::getLoginToken($apptoken, $prefs->get('appid'),
+			sub { 
+				$log->warn('Successfully signed in and got new token');
+				$cbY->();
+			},
+			sub {
+				$log->error('Could not sign in again, check the settings page');
+				$cbN->();
+			});
+		} else {
+			$log->error('Could not sign in again, check the settings page');
+			$cbN->();
+		}
+	}
 }
 
 

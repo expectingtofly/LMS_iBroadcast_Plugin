@@ -48,6 +48,11 @@ sub handler {
 			sub {
 				my $msg ='<strong>Successfully signed in</strong>';
 				my $isValid = 0;
+
+				#store the token and appid
+				$prefs->set('apptoken', $params->{pref_token});
+				$prefs->set('appid', $params->{pref_appid});
+				
 				
 				$params->{warning} .= $msg . '<br/>';
 				my $body = $class->SUPER::handler( $client, $params );
@@ -77,10 +82,24 @@ sub handler {
 		main::DEBUGLOG && $log->is_debug && $log->debug("--handler save sign in");
 		return;
 	} elsif ( $params->{signout} ) {
-		$prefs->set('usertoken', undef);
-		$prefs->set('userid', undef);
-		$params->{warning} .= '<strong>Successfully signed out</strong><br/>';
-		#TODO call a signout API?
+		Plugins::iBroadcast::API::signOut(
+			sub {
+				main::DEBUGLOG && $log->is_debug && $log->debug("Successfully Signed out");
+				$prefs->set('usertoken', undef);
+				$prefs->set('userid', undef);				
+				$prefs->set('apptoken', undef);
+				$prefs->set('appid', undef);
+				$params->{warning} .= '<strong>Successfully signed out</strong><br/>';
+			},
+			sub {
+				$log-warn("Sign out failed, but clearing tokens anyway....");
+				$prefs->set('usertoken', undef);
+				$prefs->set('userid', undef);
+				$prefs->set('apptoken', undef);
+				$prefs->set('appid', undef);
+				$params->{warning} .= '<strong>signed out</strong><br/>';
+			}
+		);		
 	}
 		
    	return $class->SUPER::handler( $client, $params );
