@@ -122,14 +122,16 @@ sub scanArtists {
 	main::DEBUGLOG && $log->is_debug && $log->debug("Artists" . Dumper($artists) );
 
 	foreach my $artist_id (@artist_ids) {
-		my $artist = $artists->{$artist_id};
-		main::DEBUGLOG && $log->is_debug && $log->debug("Artist" . Dumper($artist) );	
+		my $artist = $artists->{$artist_id};	
 
-		$progress->update($artist->[$map->{name}] || 'Unknown Artist');
-		Slim::Schema::Contributor->add({
-			'artist' => $contributorNameNormalizer->($artist->[$map->{name}]),
-			'extid'  => 'ibcst:artist:' . $artist_id
-		});
+		if (scalar @{$artist->[$map->{tracks}]}) {  #only add artists if they have tracks
+			main::DEBUGLOG && $log->is_debug && $log->debug("Artist" . Dumper($artist) );	
+			$progress->update($artist->[$map->{name}] || 'Unknown Artist');
+			Slim::Schema::Contributor->add({
+				'artist' => $contributorNameNormalizer->($artist->[$map->{name}]),
+				'extid'  => 'ibcst:artist:' . $artist_id
+			});
+		}
 	}
 	Slim::Schema->forceCommit if main::SCANNER;
 	$progress->final();
