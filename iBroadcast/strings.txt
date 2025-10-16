@@ -15,35 +15,18 @@ PLUGIN_IBROADCAST_CURRENTLY_SIGNED_IN_MESSAGE
 	ES	Actualmente has iniciado sesión, puedes cerrar sesión pulsando el botón de abajo
 	IT	Sei attualmente connesso, puoi disconnetterti premendo il pulsante qui sotto
 
-PLUGIN_IBROADCAST_NOT_SIGNED_IN_MESSAGE
-	EN	Enter an iBroadcast App ID and login token on your iBroadcast to authorise the plugin
-	FR	Saisissez un identifiant d’application iBroadcast et un jeton de connexion dans votre iBroadcast pour autoriser le plugin
-	DE	Geben Sie eine iBroadcast-App-ID und ein Anmeldetoken in Ihrem iBroadcast ein, um das Plugin zu autorisieren
-	ES	Introduce un ID de aplicación de iBroadcast y un token de inicio de sesión en tu iBroadcast para autorizar el plugin
-	IT	Inserisci un ID applicazione iBroadcast e un token di accesso nel tuo iBroadcast per autorizzare il plugin
-
 PLUGIN_IBROADCAST_SIGN_IN_PROMPT
-	EN	Enter an iBroadcast App ID and login token on your iBroadcast to authorise the plugin
+	EN	Enter your iBroadcast username/email and password to authorise the plugin. Your credentials are not stored.
 	FR	Saisissez un identifiant d’application iBroadcast et un jeton de connexion dans votre iBroadcast pour autoriser le plugin
 	DE	Geben Sie eine iBroadcast-App-ID und ein Anmeldetoken in Ihrem iBroadcast ein, um das Plugin zu autorisieren
 	ES	Introduce un ID de aplicación de iBroadcast y un token de inicio de sesión en tu iBroadcast para autorizar el plugin
 	IT	Inserisci un ID applicazione iBroadcast e un token di accesso nel tuo iBroadcast per autorizzare il plugin
 
-PLUGIN_IBROADCAST_TOKEN
-	EN	Token	
+PLUGIN_IBROADCAST_USERNAME
+	EN	Email Address
 
-PLUGIN_IBROADCAST_APP_TOKEN_DESCRIPTION
-	EN	iBroadcast App Token
-	FR	Jeton d’application iBroadcast
-	DE	iBroadcast-App-Token
-	ES	Token de aplicación iBroadcast
-	IT	Token dell’app iBroadcast
-
-PLUGIN_IBROADCAST_APP_ID
-	EN	App ID	
-
-PLUGIN_IBROADCAST_APP_ID_DESCRIPTION
-	EN	iBroadcast App ID	
+PLUGIN_IBROADCAST_PASSWORD
+	EN	Password	
 
 PLUGIN_IBROADCAST_ORIGINAL_QUALITY
 	EN	Original quality

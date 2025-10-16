@@ -44,6 +44,7 @@ sub startScan {
 	main::DEBUGLOG && $log->is_debug && $log->debug("Starting iBroadcast library scan");
 
 	if ( my $library = Plugins::iBroadcast::API::getLibrarySync() ) {
+		main::DEBUGLOG && $log->is_debug && $log->debug(Dumper($library));
 		
 		main::DEBUGLOG && $log->is_debug && $log->debug("Got library");
 

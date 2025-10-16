@@ -24,7 +24,7 @@ use constant APP_ID => '1200';
 
 
 sub getLoginToken {
-    my ($logintoken, $appID, $cbY, $cbN) = @_;
+    my ($username,$password, $cbY, $cbN) = @_;
 
     main::DEBUGLOG && $log->is_debug && $log->debug('logging in');
     my $http = Slim::Networking::SimpleAsyncHTTP->new(
@@ -52,18 +52,16 @@ sub getLoginToken {
     );
     
     my $post = to_json({
-        mode => 'login_token',
-        client => 'LMS_iBroadcast_Plugin',
-        app_id => $appID || APP_ID,
-        type => 'account',
-        device_name => 'LMS',
-        login_token => $logintoken,
-    } );
+            mode => 'status',
+            client => 'LMS_iBroadcast_Plugin',
+            email_address => $username,
+            password => $password,
+     });
 
-    main::DEBUGLOG && $log->is_debug && $log->debug('sending ' .$post);
+    main::DEBUGLOG && $log->is_debug && $log->debug('sending Login');
 
     $http->post(
-		API_URL.'login_token',
+		API_URL. 'status',
 		'Content-Type' => 'application/json',
 		$post,
 	);
@@ -137,16 +135,10 @@ sub getLibraryStatus {
                     return;
                 }
             } else {
-                Plugins::iBroadcast::API::checkAuthenticated($JSON,
-                    sub {
-                        main::DEBUGLOG && $log->is_debug && $log->debug('failed to retrieve library status due to authentication, but now authenticated');
-                        $cbN->();
-                    },
-                    sub {
-                      $log->warn('Failed to get library status due to authentication issues');
-                       $cbN->();
-                    });
-            }            
+
+                $log->error("Failed to retrieve library status due to authentication, please log in on the settigns page");
+                $cbN->();
+            }
         },
         sub {
             $log->error("error getting library status: $_[1]");
@@ -164,7 +156,7 @@ sub getLibraryStatus {
 }
 
 sub getLibrarySync {    
-    my ($cbY, $cbN, $retry) = @_;
+    my ($cbY, $cbN ) = @_;
     main::DEBUGLOG && $log->is_debug && $log->debug('getting library');    
     
     my $post = to_json(addAuth({
@@ -230,7 +222,7 @@ sub statusHistoryRecord {
             my $JSON = decode_json ${ $http->contentRef };
 
             if ( $JSON->{result}) {
-                main::DEBUGLOG && $log->is_debug && $log->debug('library status retrieved with history');
+                main::DEBUGLOG && $log->is_debug && $log->debug('library status retrieved with history');                
                 $cbY->($JSON);
                 return;
             } else {
@@ -267,7 +259,7 @@ sub getUserStatus {
         sub {
             my $http = shift;
             my $JSON = decode_json ${ $http->contentRef };
-            main::DEBUGLOG && $log->is_debug && $log->debug('Get User Status');
+            main::DEBUGLOG && $log->is_debug && $log->debug('Get User Status');     
             main::DEBUGLOG && $log->is_debug && $log->debug(Dumper($JSON));            
             $cbY->($JSON);
             return;
