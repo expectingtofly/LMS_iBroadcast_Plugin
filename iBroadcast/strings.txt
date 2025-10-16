@@ -1,5 +1,9 @@
 PLUGIN_IBROADCAST
 	EN	iBroadcast	
+	FR	iBroadcast
+	DE	iBroadcast
+	ES	iBroadcast
+	IT	iBroadcast
 
 PLUGIN_IBROADCAST_DESC
 	EN	iBroadcast online personal music library integration
@@ -9,24 +13,32 @@ PLUGIN_IBROADCAST_DESC
 	IT	Integrazione della libreria musicale personale online iBroadcast
 
 PLUGIN_IBROADCAST_CURRENTLY_SIGNED_IN_MESSAGE
-	EN	You are currently signed in, you can sign out by pressing the button below
-	FR	Vous êtes actuellement connecté, vous pouvez vous déconnecter en appuyant sur le bouton ci-dessous
-	DE	Sie sind derzeit angemeldet, Sie können sich über die Schaltfläche unten abmelden
-	ES	Actualmente has iniciado sesión, puedes cerrar sesión pulsando el botón de abajo
-	IT	Sei attualmente connesso, puoi disconnetterti premendo il pulsante qui sotto
+	EN	You are currently signed in. You can sign out by pressing the button below.
+	FR	Vous êtes actuellement connecté. Vous pouvez vous déconnecter en appuyant sur le bouton ci-dessous.
+	DE	Sie sind derzeit angemeldet. Sie können sich über die Schaltfläche unten abmelden.
+	ES	Actualmente has iniciado sesión. Puedes cerrar sesión pulsando el botón de abajo.
+	IT	Sei attualmente connesso. Puoi disconnetterti premendo il pulsante qui sotto.
 
 PLUGIN_IBROADCAST_SIGN_IN_PROMPT
-	EN	Enter your iBroadcast username/email and password to authorise the plugin. Your credentials are not stored.
-	FR	Saisissez un identifiant d’application iBroadcast et un jeton de connexion dans votre iBroadcast pour autoriser le plugin
-	DE	Geben Sie eine iBroadcast-App-ID und ein Anmeldetoken in Ihrem iBroadcast ein, um das Plugin zu autorisieren
-	ES	Introduce un ID de aplicación de iBroadcast y un token de inicio de sesión en tu iBroadcast para autorizar el plugin
-	IT	Inserisci un ID applicazione iBroadcast e un token di accesso nel tuo iBroadcast per autorizzare il plugin
+	EN	Enter your iBroadcast username or email and password to authorise the plugin. Your credentials are not stored.
+	FR	Saisissez votre nom d’utilisateur ou adresse e-mail iBroadcast et votre mot de passe pour autoriser le plugin. Vos identifiants ne sont pas enregistrés.
+	DE	Geben Sie Ihren iBroadcast-Benutzernamen oder Ihre E-Mail-Adresse und Ihr Passwort ein, um das Plugin zu autorisieren. Ihre Anmeldedaten werden nicht gespeichert.
+	ES	Introduce tu nombre de usuario o correo electrónico y contraseña de iBroadcast para autorizar el complemento. Tus credenciales no se guardan.
+	IT	Inserisci il tuo nome utente o indirizzo e-mail iBroadcast e la password per autorizzare il plugin. Le tue credenziali non vengono memorizzate.
 
 PLUGIN_IBROADCAST_USERNAME
 	EN	Email Address
+	FR	Adresse e-mail
+	DE	E-Mail-Adresse
+	ES	Dirección de correo electrónico
+	IT	Indirizzo e-mail
 
 PLUGIN_IBROADCAST_PASSWORD
 	EN	Password	
+	FR	Mot de passe
+	DE	Passwort
+	ES	Contraseña
+	IT	Password
 
 PLUGIN_IBROADCAST_ORIGINAL_QUALITY
 	EN	Original quality
@@ -37,17 +49,17 @@ PLUGIN_IBROADCAST_ORIGINAL_QUALITY
 
 PLUGIN_IBROADCAST_STREAMING_BITRATE
 	EN	Streaming Bitrate
-	FR	Débit binaire du flux
+	FR	Débit binaire du streaming
 	DE	Streaming-Bitrate
-	ES	Tasa de bits de transmisión
+	ES	Tasa de bits de streaming
 	IT	Bitrate di streaming
 
 PLUGIN_IBROADCAST_BITRATE_MESSAGE
-	EN	You will need an iBroadcast premium account to stream higher than 128 kbps
-	FR	Vous aurez besoin d’un compte iBroadcast Premium pour diffuser à plus de 128 kbps
-	DE	Sie benötigen ein iBroadcast-Premium-Konto, um mit mehr als 128 kbps zu streamen
-	ES	Necesitas una cuenta iBroadcast Premium para transmitir por encima de 128 kbps
-	IT	È necessario un account iBroadcast Premium per lo streaming oltre 128 kbps
+	EN	You will need an iBroadcast Premium account to stream higher than 128 kbps.
+	FR	Vous aurez besoin d’un compte iBroadcast Premium pour diffuser à plus de 128 kbps.
+	DE	Sie benötigen ein iBroadcast-Premium-Konto, um mit mehr als 128 kbps zu streamen.
+	ES	Necesitas una cuenta iBroadcast Premium para transmitir por encima de 128 kbps.
+	IT	È necessario un account iBroadcast Premium per effettuare lo streaming oltre 128 kbps.
 
 PLUGIN_IBROADCAST_UNKNOWN_ALBUM
 	EN	Unknown Album
@@ -55,5 +67,3 @@ PLUGIN_IBROADCAST_UNKNOWN_ALBUM
 	DE	Unbekanntes Album
 	ES	Álbum desconocido
 	IT	Album sconosciuto
-
-	

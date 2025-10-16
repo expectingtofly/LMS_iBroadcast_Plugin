@@ -3,50 +3,53 @@
   .brand-light, .brand-dark {
     display: none;    
   }
+  
 </style>
 [% PROCESS settings/header.html %]	
 	[% IF isSignedIn %]
 	<strong>[% "PLUGIN_IBROADCAST_CURRENTLY_SIGNED_IN_MESSAGE" | string %] :</strong>
 	<br/>
 	<input name="signout" type="submit" value="Sign Out" class="stdclick" />
-	<br/>
-	
+	<br/>	
 	[% END %]
 	[% IF isSignedOut %]
-		[% "PLUGIN_IBROADCAST_SIGN_IN_PROMPT" | string %]:<br/>    
-	
-		[% WRAPPER setting title="App ID" desc="IBroadcast App ID" %]
-		<div class="prefDesc">
-			<input type="text" class="stdedit" name="pref_appid" value="[% prefs.appid %]" size="40" />	
-		</div>
-		[% END %]
-		
-		
-		[% WRAPPER setting title="PLUGIN_IBROADCAST_TOKEN" desc="PLUGIN_IBROADCAST_APP_TOKEN_DESCRIPTION" %]
-		<div class="prefDesc">
-			<input type="text" class="stdedit" name="pref_token" value="[% prefs.token %]" size="40" />	
-		
-				
 		<script type="text/javascript"> 
 			function bschangeText(submitId){
 				var submit = document.getElementById(submitId);
 				submit.value = 'Please wait...';
 				return true;
 			};		
-		</script>
-		[% IF useExtJS || useAJAX %]
-			<input name="signin" type="submit" value="Sign In" class="stdclick" id="btnsignin" onclick="return bschangeText('btnsignin');" />
-		[% ELSE %]
-			<input name="signin" type="submit" value="Sign In" class="stdclick" />
-		[% END %]
-		</div>
-		[% END %]				
-		<br/>
-
-	
+		</script>				
+		[% "PLUGIN_IBROADCAST_SIGN_IN_PROMPT" | string %]:<br/>
+			[% WRAPPER setting title="PLUGIN_IBROADCAST_USERNAME" desc="" %]
+			<div class="prefDesc">
+				<input type="text" class="stdedit" name="pref_username" value="[% prefs.username %]" size="40" />	
+			</div>
+			[% END %]
+		
+			[% WRAPPER setting title="PLUGIN_IBROADCAST_PASSWORD" desc="" %]
+			<div class="prefDesc">
+				<input type="text" class="stdedit" name="pref_password" value="[% prefs.password %]" size="40" />	
+			</div>
+			[% IF useExtJS || useAJAX %]
+				<input name="signin" type="submit" value="Sign In" class="stdclick" id="btnsignin" onclick="return bschangeText('btnsignin');" />
+			[% ELSE %]
+				<input name="signin" type="submit" value="Sign In" class="stdclick" />
+			[% END %]		
+		[% END %]			
+		<br/>	
 	[% END %]
+ 	<hr/>	
 
-	
+  	[% WRAPPER setting title="PLUGIN_IBROADCAST_STREAMING_BITRATE" desc="PLUGIN_IBROADCAST_BITRATE_MESSAGE" %]
+	<select class="stdedit" name="pref_bitrate" id="pref_bitrate">			
+				<option [% IF prefs.pref_bitrate == '96' %]selected [% END %]value="96">96 kbps</option>
+				<option [% IF prefs.pref_bitrate == '128' %]selected [% END %]value="128">128 kbps</option>
+				<option [% IF prefs.pref_bitrate == '256' %]selected [% END %]value="256">256 kbps</option>
+				<option [% IF prefs.pref_bitrate == '320' %]selected [% END %]value="320">320 kbps</option>			
+				<option [% IF prefs.pref_bitrate == 'orig' %]selected [% END %]value="orig">[% "PLUGIN_IBROADCAST_ORIGINAL_QUALITY" | string %]</option>			
+	</select>
+	[% END %]
 
 <!-- Branding images -->
 <img src="[% webroot %]plugins/iBroadcast/html/images/ibroadcast-light-compact-powered.png" class="brand-light" alt="Light logo">
@@ -71,18 +74,6 @@
       light.style.display = 'block';
     }
   });
-  </script>
-
-  <hr/>	
-
-  	[% WRAPPER setting title="PLUGIN_IBROADCAST_STREAMING_BITRATE" desc="PLUGIN_IBROADCAST_BITRATE_MESSAGE" %]
-	<select class="stdedit" name="pref_bitrate" id="pref_bitrate">			
-				<option [% IF prefs.pref_bitrate == '96' %]selected [% END %]value="96">96 kbps</option>
-				<option [% IF prefs.pref_bitrate == '128' %]selected [% END %]value="128">128 kbps</option>
-				<option [% IF prefs.pref_bitrate == '256' %]selected [% END %]value="256">256 kbps</option>
-				<option [% IF prefs.pref_bitrate == '320' %]selected [% END %]value="320">320 kbps</option>			
-				<option [% IF prefs.pref_bitrate == 'orig' %]selected [% END %]value="orig">[% "PLUGIN_IBROADCAST_ORIGINAL_QUALITY" | string %]</option>			
-	</select>
-	[% END %]
+  </script> 
 
 [% PROCESS settings/footer.html %]
