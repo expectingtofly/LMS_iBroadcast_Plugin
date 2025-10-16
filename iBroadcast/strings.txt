@@ -20,11 +20,11 @@ PLUGIN_IBROADCAST_CURRENTLY_SIGNED_IN_MESSAGE
 	IT	Sei attualmente connesso. Puoi disconnetterti premendo il pulsante qui sotto.
 
 PLUGIN_IBROADCAST_SIGN_IN_PROMPT
-	EN	Enter your iBroadcast username or email and password to authorise the plugin. Your credentials are not stored.
-	FR	Saisissez votre nom d’utilisateur ou adresse e-mail iBroadcast et votre mot de passe pour autoriser le plugin. Vos identifiants ne sont pas enregistrés.
-	DE	Geben Sie Ihren iBroadcast-Benutzernamen oder Ihre E-Mail-Adresse und Ihr Passwort ein, um das Plugin zu autorisieren. Ihre Anmeldedaten werden nicht gespeichert.
-	ES	Introduce tu nombre de usuario o correo electrónico y contraseña de iBroadcast para autorizar el complemento. Tus credenciales no se guardan.
-	IT	Inserisci il tuo nome utente o indirizzo e-mail iBroadcast e la password per autorizzare il plugin. Le tue credenziali non vengono memorizzate.
+	EN	Enter your iBroadcast username/email address and password to authorise the plugin. Your credentials are not stored
+	FR	Saisissez votre nom d’utilisateur ou adresse e-mail iBroadcast et votre mot de passe pour autoriser le plugin. Vos identifiants ne sont pas enregistrés
+	DE	Geben Sie Ihren iBroadcast-Benutzernamen oder Ihre E-Mail-Adresse und Ihr Passwort ein, um das Plugin zu autorisieren. Ihre Anmeldedaten werden nicht gespeichert
+	ES	Introduce tu nombre de usuario o correo electrónico y contraseña de iBroadcast para autorizar el complemento. Tus credenciales no se guardan
+	IT	Inserisci il tuo nome utente o indirizzo e-mail iBroadcast e la password per autorizzare il plugin. Le tue credenziali non vengono memorizzate
 
 PLUGIN_IBROADCAST_USERNAME
 	EN	Email Address
