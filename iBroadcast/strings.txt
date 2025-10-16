@@ -13,11 +13,11 @@ PLUGIN_IBROADCAST_DESC
 	IT	Integrazione della libreria musicale personale online iBroadcast
 
 PLUGIN_IBROADCAST_CURRENTLY_SIGNED_IN_MESSAGE
-	EN	You are currently signed in. You can sign out by pressing the button below.
-	FR	Vous êtes actuellement connecté. Vous pouvez vous déconnecter en appuyant sur le bouton ci-dessous.
-	DE	Sie sind derzeit angemeldet. Sie können sich über die Schaltfläche unten abmelden.
-	ES	Actualmente has iniciado sesión. Puedes cerrar sesión pulsando el botón de abajo.
-	IT	Sei attualmente connesso. Puoi disconnetterti premendo il pulsante qui sotto.
+	EN	You are currently signed in. You can sign out by pressing the button below
+	FR	Vous êtes actuellement connecté. Vous pouvez vous déconnecter en appuyant sur le bouton ci-dessous
+	DE	Sie sind derzeit angemeldet. Sie können sich über die Schaltfläche unten abmelden
+	ES	Actualmente has iniciado sesión. Puedes cerrar sesión pulsando el botón de abajo
+	IT	Sei attualmente connesso. Puoi disconnetterti premendo il pulsante qui sotto
 
 PLUGIN_IBROADCAST_SIGN_IN_PROMPT
 	EN	Enter your iBroadcast username/email address and password to authorise the plugin. Your credentials are not stored
