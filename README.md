@@ -14,3 +14,6 @@ Once Installed sign in on the iBroadcast settings page using your iBroadcast use
 Once signed in, you can rescan your library (or choose to scan your online library only) and your iBroadcast music library will be scanned and imported into your library.
 Playing an iBroadcast track will stream it from your online library.
 If you have automatic check for changes selected on your Online Music Library settings, then the plugin will automatic update your library if your iBroadcast library has changed.
+
+There is a thread on the lyrion forums site for discussion and help.
+https://forums.lyrion.org/forum/user-forums/3rd-party-software/1792234-announce-ibroadcast-online-music-library-integration-plugin
