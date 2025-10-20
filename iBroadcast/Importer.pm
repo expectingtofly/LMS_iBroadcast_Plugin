@@ -43,8 +43,7 @@ sub startScan {
 	$log->error('iBroadcast library import started');
 	main::DEBUGLOG && $log->is_debug && $log->debug("Starting iBroadcast library scan");
 
-	if ( my $library = Plugins::iBroadcast::API::getLibrarySync() ) {
-		main::DEBUGLOG && $log->is_debug && $log->debug(Dumper($library));
+	if ( my $library = Plugins::iBroadcast::API::getLibrarySync() ) {		
 		
 		main::DEBUGLOG && $log->is_debug && $log->debug("Got library");
 
@@ -77,17 +76,17 @@ sub scanAlbums {
 		my $albums = $library->{library}{albums};
 		my @album_ids = grep { $_ ne 'map' } keys %$albums;
 		my $map	= $albums->{map};
+		my $tags = $library->{library}{tags};		
+
 
 		$class->initOnlineTracksTable();
 
-	
-		main::DEBUGLOG && $log->is_debug && $log->debug("Albums" . Dumper($albums) );
 
 		my $progress;
 		foreach my $album_id (@album_ids) {
 			my $album = $albums->{$album_id};
 			main::DEBUGLOG && $log->is_debug && $log->debug("Album" . Dumper($album) );
-			$class->scanAlbum($album,$map,$library,$progress);
+			$class->scanAlbum($album,$map,$library,$progress,$tags);
 		}
 		$progress->final() if $progress;
 		main::SCANNER && Slim::Schema->forceCommit;
@@ -142,7 +141,7 @@ sub scanArtists {
 
 
 sub scanAlbum {
-	my ($class, $album, $albumMap, $library, $progress) = @_;
+	my ($class, $album, $albumMap, $library, $progress, $tags) = @_;
 
 	if ($progress) {
 		$progress->total($progress->total + 1);
@@ -162,13 +161,17 @@ sub scanAlbum {
 
 	my $preparedTracks = [];	
 	
-	foreach my $trackid (@{$album->[$albumMap->{tracks}] || []}) {
+	foreach my $trackid (@{$album->[$albumMap->{tracks}] || []}) {		
+		my $tagArr = [];
 		my $track = $library->{library}->{tracks}->{$trackid};
 		my $trackMap = $library->{library}->{tracks}->{map};
 
 		my $artist = $library->{library}->{artists}->{$track->[$trackMap->{artist_id}]};
 		my $artistName = $artist->[$library->{library}->{artists}->{map}->{name}];
 
+		if ($tags) {
+			$tagArr = _getTagArray($tags, $trackid);
+		}
 
 		my $composer;
 		if (my $additionalArtists = $track->[$trackMap->{artists_additional}]) {
@@ -182,7 +185,7 @@ sub scanAlbum {
 
 		}
 
-		push @$preparedTracks, _prepareTrack($trackid, $library->{library}->{tracks}->{$trackid},  $library->{library}->{tracks}->{map}, $album->[$albumMap->{name}], $artistName,  $album->[$albumMap->{disc}], $composer);
+		push @$preparedTracks, _prepareTrack($trackid, $library->{library}->{tracks}->{$trackid},  $library->{library}->{tracks}->{map}, $album->[$albumMap->{name}], $artistName,  $album->[$albumMap->{disc}], $composer, $tagArr);
 
 	}
 	main::DEBUGLOG && $log->is_debug && $log->debug("Prepared " . scalar(@$preparedTracks) . " tracks for album " . $album->[$albumMap->{name}] );
@@ -192,11 +195,13 @@ sub scanAlbum {
 }
 
 sub _prepareTrack {
-	my ($trackid, $track, $map, $albumName, $artistName, $disc, $composer) = @_;
+	my ($trackid, $track, $map, $albumName, $artistName, $disc, $composer, $tagArr) = @_;
 
 	my $splitChar = substr(preferences('server')->get('splitList'), 0, 1);
 
 	my $url = 'ibcst://' . _replacebitratewithtoken($track->[$map->{file}]) . '_' . $trackid;
+
+	my $tags = join($splitChar, @$tagArr);
 
 	
 	my $preparedTrack = {
@@ -216,6 +221,9 @@ sub _prepareTrack {
 		YEAR         => $track->[$map->{year}],
 		COVER        => 'https://artwork.ibroadcast.com/artwork/' . $track->[$map->{artwork_id}] . '-300',
 		AUDIO        => 1,
+		REPLAYGAIN_TRACK_GAIN => $track->[$map->{replay_gain}],
+		RATING 		 => $track->[$map->{rating}],
+		COMMENT		 => $tags,
 		EXTID        => $url,	
 		TIMESTAMP    => str2time($track->[$map->{uploaded_on}] || 0),
 		CONTENT_TYPE => 'ibcst'
@@ -269,6 +277,26 @@ sub needsUpdate {
         }
     );
     
+}
+
+sub _getTagArray {
+	my ($tags, $trackID) = @_;
+
+	my $tagArr = [];
+
+	my @tag_ids = grep { $_ ne 'map' } keys %$tags;
+
+	foreach my $tagid (@tag_ids) {
+		foreach my $tagtrackID (@{$tags->{$tagid}->{'tracks'}}) {
+			main::DEBUGLOG && $log->is_debug && $log->debug("found $trackID and $tagtrackID in tag");  
+			if ($tagtrackID eq $trackID) {
+				push @$tagArr, $tags->{$tagid}->{'name'};
+			}
+		}
+	}
+	
+	return $tagArr;
+			
 }
 
 sub trackUriPrefix { 'ibcst://' }
