@@ -1,4 +1,4 @@
-A Lyrion Music Server (LMS) plugin that will integrate the IBroadcast.com  personal music library with your LMS music library.
+This is a Lyrion Music Server (LMS) plugin that will integrate the IBroadcast.com  personal music library with your LMS music library.
 Allowing you to stream your online music library from your LMS music library.
 
 Broadcast allow you to upload your entire music collection and stream it online and to a number of different devices.
