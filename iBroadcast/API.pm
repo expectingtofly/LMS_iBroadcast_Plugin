@@ -136,7 +136,10 @@ sub getLibraryStatus {
                 }
             } else {
 
-                $log->error("Failed to retrieve library status due to authentication, please log in on the settigns page");
+                $log->error("Failed to retrieve library status due to authentication, please log in on the settings page");                
+		        if ( $JSON->{authenticated} == 0 ) {# we got a positive not authenticated.  Remove token.
+			        $prefs->remove('usertoken');
+		        }
                 $cbN->();
             }
         },
@@ -259,8 +262,7 @@ sub getUserStatus {
         sub {
             my $http = shift;
             my $JSON = decode_json ${ $http->contentRef };
-            main::DEBUGLOG && $log->is_debug && $log->debug('Get User Status');     
-            main::DEBUGLOG && $log->is_debug && $log->debug(Dumper($JSON));            
+            main::DEBUGLOG && $log->is_debug && $log->debug('Got User Status');
             $cbY->($JSON);
             return;
            

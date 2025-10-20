@@ -127,7 +127,9 @@ sub checkAuthenticated {
 		return 1;
 	} else {
 		$log->error('Not Authenticated, Please sign in on the settings page');
-		$prefs->remove('usertoken');
+		if ( $JSON->{authenticated} == 0 ) {# we got a positive not authenticated.  Remove token.
+			$prefs->remove('usertoken');
+		}
 		return;		
 	}
 }
