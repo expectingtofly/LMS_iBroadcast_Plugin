@@ -221,7 +221,6 @@ sub _prepareTrack {
 		YEAR         => $track->[$map->{year}],
 		COVER        => 'https://artwork.ibroadcast.com/artwork/' . $track->[$map->{artwork_id}] . '-300',
 		AUDIO        => 1,
-		REPLAYGAIN_TRACK_GAIN => $track->[$map->{replay_gain}],
 		RATING 		 => $track->[$map->{rating}],
 		COMMENT		 => $tags,
 		EXTID        => $url,	
