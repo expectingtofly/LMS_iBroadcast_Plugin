@@ -81,12 +81,13 @@ sub scanAlbums {
 
 		$class->initOnlineTracksTable();
 
+		my $trackTags =  _getTrackToTags($tags);
 
 		my $progress;
 		foreach my $album_id (@album_ids) {
 			my $album = $albums->{$album_id};
 			main::DEBUGLOG && $log->is_debug && $log->debug("Album" . Dumper($album) );
-			$class->scanAlbum($album,$map,$library,$progress,$tags);
+			$class->scanAlbum($album,$map,$library,$progress,$trackTags);
 		}
 		$progress->final() if $progress;
 		main::SCANNER && Slim::Schema->forceCommit;
@@ -141,7 +142,7 @@ sub scanArtists {
 
 
 sub scanAlbum {
-	my ($class, $album, $albumMap, $library, $progress, $tags) = @_;
+	my ($class, $album, $albumMap, $library, $progress, $trackTags) = @_;
 
 	if ($progress) {
 		$progress->total($progress->total + 1);
@@ -169,8 +170,8 @@ sub scanAlbum {
 		my $artist = $library->{library}->{artists}->{$track->[$trackMap->{artist_id}]};
 		my $artistName = $artist->[$library->{library}->{artists}->{map}->{name}];
 
-		if ($tags) {
-			$tagArr = _getTagArray($tags, $trackid);
+		if ($trackTags) {
+			$tagArr = $trackTags->{$trackid} || [];
 		}
 
 		my $composer;
@@ -278,23 +279,23 @@ sub needsUpdate {
     
 }
 
-sub _getTagArray {
-	my ($tags, $trackID) = @_;
-
-	my $tagArr = [];
-
-	my @tag_ids = grep { $_ ne 'map' } keys %$tags;
-
-	foreach my $tagid (@tag_ids) {
-		foreach my $tagtrackID (@{$tags->{$tagid}->{'tracks'}}) {
-			main::DEBUGLOG && $log->is_debug && $log->debug("found $trackID and $tagtrackID in tag");  
-			if ($tagtrackID eq $trackID) {
-				push @$tagArr, $tags->{$tagid}->{'name'};
-			}
+sub _getTrackToTags {
+	my ($tags) = @_;
+	
+	my %trackToTags;
+	 main::DEBUGLOG && $log->is_debug && $log->debug('Converting tag array');     
+	
+	# Build reverse index: track ID to arrayref of tag names
+	for my $tagid (keys %$tags) {
+		my $tag = $tags->{$tagid};
+		my $tagName = $tag->{name};
+		for my $trackid (@{ $tag->{tracks} }) {
+			push @{ $trackToTags{$trackid} }, $tagName;
 		}
 	}
-	
-	return $tagArr;
+	main::DEBUGLOG && $log->is_debug && $log->debug('Completed converting tag array');     
+
+	return \%trackToTags;
 			
 }
 
