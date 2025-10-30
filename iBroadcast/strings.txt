@@ -26,6 +26,13 @@ PLUGIN_IBROADCAST_INSTRUCTIONS
 	ES	Tu biblioteca en línea de iBroadcast estará disponible en tu biblioteca LMS después del próximo análisis
 	IT	La tua libreria online iBroadcast sarà disponibile nella tua libreria LMS dopo la prossima scansione
 
+PLUGIN_IBROADCAST_CLICK_HERE_HELP
+	EN	Click here for help		
+	FR	Cliquez ici pour obtenir de l’aide
+	DE	Hier klicken, um Hilfe zu erhalten
+	ES	Haz clic aquí para obtener ayuda
+	IT	Fai clic qui per assistenza
+
 PLUGIN_IBROADCAST_SIGN_IN_PROMPT
 	EN	Enter your iBroadcast username/email address and password to authorise the plugin. Your credentials are not stored
 	FR	Saisissez votre nom d’utilisateur ou adresse e-mail iBroadcast et votre mot de passe pour autoriser le plugin. Vos identifiants ne sont pas enregistrés
