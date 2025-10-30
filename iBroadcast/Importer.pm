@@ -43,13 +43,22 @@ sub startScan {
 	$log->error('iBroadcast library import started');
 	main::DEBUGLOG && $log->is_debug && $log->debug("Starting iBroadcast library scan");
 
-	if ( my $library = Plugins::iBroadcast::API::getLibrarySync() ) {		
-		
+	if ( my $library = Plugins::iBroadcast::API::getLibrarySync() ) {
+
 		main::DEBUGLOG && $log->is_debug && $log->debug("Got library");
 
-		$class->scanAlbums($library);
+		my $playlistsOnly = Slim::Music::Import->scanPlaylistsOnly();
 
-		$class->scanArtists($library);
+		$class->initOnlineTracksTable();
+
+		if (!$playlistsOnly) {
+			$class->scanAlbums($library);
+			$class->scanArtists($library);
+		}
+
+		if (!$class->_ignorePlaylists) {
+			$class->scanPlaylists($library);
+		}
 		
 		$class->deleteRemovedTracks();
 
@@ -79,7 +88,6 @@ sub scanAlbums {
 		my $tags = $library->{library}{tags};		
 
 
-		$class->initOnlineTracksTable();
 
 		my $trackTags =  _getTrackToTags($tags);
 
@@ -247,6 +255,73 @@ sub _replacebitratewithtoken {
 	return $url;
 }
 
+sub scanPlaylists {
+	my ($class,$library, ) = @_;
+
+	my $dbh = Slim::Schema->dbh();
+
+	my $progress = Slim::Utils::Progress->new({
+		'type'  => 'importer',
+		'name'  => 'plugin_ibroadcast_playlists',
+		'total' => 1,
+		'every' => 1,
+	});
+
+	main::INFOLOG && $log->is_info && $log->info("Removing playlists...");
+	$progress->update(string('PLAYLIST_DELETED_PROGRESS'));
+	my $deletePlaylists_sth = $dbh->prepare_cached("DELETE FROM tracks WHERE url LIKE 'ibcst:playlist:%'");
+	$deletePlaylists_sth->execute();
+
+
+
+
+	#Playlists
+	my $playlists = $library->{library}{playlists};
+	my @playlist_ids = grep { $_ ne 'map' } keys %$playlists;
+	my $map	= $playlists->{map};
+
+	my $tracks = $library->{library}{tracks};
+	my $trackMap = $tracks->{map};
+
+	main::DEBUGLOG && $log->is_debug && $log->debug("Playlists" . Dumper($playlists) );
+
+	my $prefix = 'iBroadcast' . string('COLON') . ' ';
+	my $insertTrackInTempTable_sth = $dbh->prepare_cached("INSERT OR IGNORE INTO online_tracks (url) VALUES (?)") if main::SCANNER && !$main::wipe;
+
+	foreach my $playlist_id (@playlist_ids) {
+		$progress->update( $playlists->{$playlist_id}->[$map->{name}] );
+		my $playlist = $playlists->{$playlist_id};
+		main::DEBUGLOG && $log->is_debug && $log->debug("Playlist" . Dumper($playlist) );
+		Slim::Schema->forceCommit;
+
+
+		my $url = 'ibcst:playlist:' . $playlist_id;
+
+		my $playlistObj = Slim::Schema->updateOrCreate({
+			url        => $url,
+			playlist   => 1,
+			integrateRemote => 1,
+			attributes => {
+				TITLE        => $prefix . $playlist->[$map->{name}],
+				COVER        => 'https://artwork.ibroadcast.com/artwork/' . $playlist->[$map->{artwork_id}] . '-300',
+				AUDIO        => 1,
+				EXTID        => $url,
+				CONTENT_TYPE => 'ssp'
+			},
+		});
+
+
+		my @tracklist = map { 'ibcst://' . _replacebitratewithtoken($tracks->{$_}->[$trackMap->{file}]) . '_' . $_ } @{ $playlist->[$map->{tracks}] };
+		$playlistObj->setTracks(\@tracklist) if $playlistObj && scalar @tracklist;
+		$insertTrackInTempTable_sth && $insertTrackInTempTable_sth->execute($url);
+
+		main::DEBUGLOG && $log->is_debug && $log->debug("Inserted playlist " . $playlist->[$map->{name}] . " with " . scalar(@tracklist) . " tracks");	
+	
+	}
+	Slim::Schema->forceCommit if main::SCANNER;
+
+}
+
 
 
 # This code is not run in the scanner, but in LMS
@@ -297,6 +372,11 @@ sub _getTrackToTags {
 
 	return \%trackToTags;
 			
+}
+
+sub _ignorePlaylists {
+	my $class = shift;
+	return $class->can('ignorePlaylists') && $class->ignorePlaylists;
 }
 
 sub trackUriPrefix { 'ibcst://' }
