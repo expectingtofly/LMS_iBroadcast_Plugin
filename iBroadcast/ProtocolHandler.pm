@@ -76,6 +76,27 @@ sub formatOverride {
 	return $format;
 }
 
+sub getNextTrack {
+	my ($class, $song, $successCb, $errorCb) = @_;
+
+	my $url = $song->currentTrack()->url;
+	main::DEBUGLOG && $log->is_debug && $log->debug("Getting next track url for $url");
+	if (my $httpUrl = _resolveUrl($url)) {
+		main::DEBUGLOG && $log->is_debug && $log->debug("Resolved ibcst url for next track: $httpUrl");
+		$song->streamUrl($httpUrl);
+		
+		my $contentType = $song->pluginData('format');
+		$song->track->content_type($contentType);
+		main::DEBUGLOG && $log->is_debug && $log->debug("Setting content type for next track: $contentType");
+
+		$successCb->();
+
+	} else {		
+		$log->error("$url is invalid");					
+		$errorCb->();		
+	}
+}
+
 sub onStream {
 	my ($self, $client, $song) = @_;
 
