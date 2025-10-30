@@ -19,6 +19,13 @@ PLUGIN_IBROADCAST_CURRENTLY_SIGNED_IN_MESSAGE
 	ES	Actualmente has iniciado sesión. Puedes cerrar sesión pulsando el botón de abajo
 	IT	Sei attualmente connesso. Puoi disconnetterti premendo il pulsante qui sotto
 
+PLUGIN_IBROADCAST_INSTRUCTIONS
+	EN	Your iBroadcast online library will now be available in your LMS library after your next scan
+	FR	Votre bibliothèque iBroadcast en ligne sera disponible dans votre bibliothèque LMS après votre prochain scan
+	DE	Ihre iBroadcast-Onlinebibliothek wird nach dem nächsten Scan in Ihrer LMS-Bibliothek verfügbar sein
+	ES	Tu biblioteca en línea de iBroadcast estará disponible en tu biblioteca LMS después del próximo análisis
+	IT	La tua libreria online iBroadcast sarà disponibile nella tua libreria LMS dopo la prossima scansione
+
 PLUGIN_IBROADCAST_SIGN_IN_PROMPT
 	EN	Enter your iBroadcast username/email address and password to authorise the plugin. Your credentials are not stored
 	FR	Saisissez votre nom d’utilisateur ou adresse e-mail iBroadcast et votre mot de passe pour autoriser le plugin. Vos identifiants ne sont pas enregistrés
