@@ -262,7 +262,7 @@ sub scanPlaylists {
 
 	my $progress = Slim::Utils::Progress->new({
 		'type'  => 'importer',
-		'name'  => 'plugin_ibroadcast_playlists',
+		'name'  => 'iBroadcast Playlists',
 		'total' => 1,
 		'every' => 1,
 	});
