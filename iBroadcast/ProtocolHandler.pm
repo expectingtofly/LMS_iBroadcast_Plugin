@@ -24,72 +24,85 @@ my $prefs = preferences('plugin.ibroadcast');
 
 use constant CAN_GETOBJECTFORURL => (Slim::Utils::Versions->compareVersions($::VERSION, '9.1.0') >= 0);
 
-# remove podcast:// protocol to scan real url
+
 sub scanUrl {
-	my ( $class, $url, $args ) = @_;
-
-	my $song = $args->{song};
-	my $httpUrl = _resolveUrl($url);
-	main::DEBUGLOG && $log->is_debug && $log->debug("Resolved ibcst url $url => $httpUrl");
-	my $cb = $args->{cb};	
-	
-	$args->{cb} = sub {
-		my $track = shift;
-
-		if ($track) {
-			main::INFOLOG && $log->info("Scanned ibcst $url => ", $track->url);
-
-			# use the scanned track to get streamable url, ignore scanned title and coverart
-			$song->streamUrl($track->url);
-			
-			my $format = $track->content_type;			
-			$song->pluginData('format', $format);			
-
-			my $bitrate = $track->bitrate();			
-			$song->bitrate($bitrate);
-			main::DEBUGLOG && $log->is_debug && $log->debug("bitrate is : $bitrate format :  $format");							
-			
-			# reset track's url - from now on all $url-based requests will refer to that track
-			$track->url($url);
-		}
-
-		$cb->($track, @_);
-	};
-
-	$class->SUPER::scanUrl($httpUrl, $args);
+	my ($class, $url, $args) = @_;
+	$args->{cb}->( $args->{song}->currentTrack() );
 }
 
-sub new {
-	my ($class, $args) = @_;
 
-	# use streaming url but avoid redirection loop
-	$args->{url} = $args->{song}->streamUrl unless $args->{redir};
-	return $class->SUPER::new( $args );
+# To support remote streaming (synced players), we need to subclass Protocols::HTTP
+sub new {
+	my $class  = shift;
+	my $args   = shift;
+
+	my $client = $args->{client};
+
+	my $song      = $args->{song};
+	my $streamUrl = $song->streamUrl() || return;
+
+	main::DEBUGLOG && $log->debug( 'Remote streaming iBroadcast track: ' . $streamUrl );
+
+	my $sock = $class->SUPER::new( {
+		url     => $streamUrl,
+		song    => $args->{song},
+		client  => $client,
+	} ) || return;
+
+	return $sock;
 }
 
 sub audioScrobblerSource { 'P' }
 
 sub formatOverride {
 	my ($class, $song) = @_;
-	#just return mp3 for now
-	my $format = $song->pluginData('format');
+	
+	my $format = $song->pluginData( 'format' ) || 'mp3';
+	
+	main::DEBUGLOG && $log->is_debug && $log->debug("format override to $format");
+	
 	return $format;
 }
 
 sub getNextTrack {
 	my ($class, $song, $successCb, $errorCb) = @_;
-
+	my $client = $song->master();
 	my $url = $song->currentTrack()->url;
 	main::DEBUGLOG && $log->is_debug && $log->debug("Getting next track url for $url");
 	if (my $httpUrl = _resolveUrl($url)) {
+		
 		main::DEBUGLOG && $log->is_debug && $log->debug("Resolved ibcst url for next track: $httpUrl");
 		$song->streamUrl($httpUrl);
-		
-		my $contentType = $song->pluginData('format');
-		$song->track->content_type($contentType);
-		main::DEBUGLOG && $log->is_debug && $log->debug("Setting content type for next track: $contentType");
 
-		$successCb->();
+		_getContentTypeHeader($httpUrl,
+			sub {
+				my ($contentType) = @_;
+				my $format = _content_type_to_lms_format($contentType);
+				
+				$song->pluginData( 'format', $format );
+				main::DEBUGLOG && $log->is_debug && $log->debug("Content-Type indicates format is $format");
+				
+				# now try to acquire the header for seeking and various details
+				Slim::Utils::Scanner::Remote::parseRemoteHeader(
+				$song->track, $httpUrl, $format,
+				sub {
+					main::DEBUGLOG && $log->is_debug && $log->debug("found $format header");					
+					$client->currentPlaylistUpdateTime( Time::HiRes::time() );
+					Slim::Control::Request::notifyFromArray( $client, [ 'newmetadata' ] );
+					$successCb->();
+				},
+				sub {
+					my ($self, $error) = @_;
+					$log->warn( "could not find $format header $error" );
+					$successCb->();
+				});
+				
+			},
+			sub {
+				$log->warn("Could not get Content-Type header, defaulting to mp3");
+				$successCb->();
+			}
+		);
 
 	} else {		
 		$log->error("$url is invalid");					
@@ -216,6 +229,32 @@ sub _addbitrate {
 	return $url;
 }
 
+sub _getContentTypeHeader {
+	my ($url, $cb, $errorCb) = @_;	
+
+	my $http = Slim::Networking::Async::HTTP->new;
+	my $request = HTTP::Request->new( GET => $url );
+	$http->send_request(
+		{
+			request     => $request,
+			onHeaders => sub {	
+				my $headers = shift->response->headers;
+				my $contentType = $headers->header('Content-Type') || '';
+				main::DEBUGLOG && $log->is_debug && $log->debug("Content-Type for $url is $contentType");
+				$http->disconnect;
+				$cb->($contentType);
+			},
+			onError => sub {
+				my ( $http, $self ) = @_;
+				my $res = $http->response;
+				$log->error('Error status - ' . $res->status_line );
+				$errorCb->();
+			}
+		}
+	);
+
+}
+
 
 sub _getTrackIDFromUrl {
 	my ($url) = @_;
@@ -234,6 +273,39 @@ sub _getTrackIDFromUrl {
 		$log->warn("Invalid ibcst url: $url");
 		return undef;
 	}
+}
+
+sub _content_type_to_lms_format {
+    my ($content_type) = @_;
+    return unless $content_type;
+
+    # Normalise (lowercase, strip parameters)
+    $content_type = lc($content_type);
+    $content_type =~ s/;.*$//;
+
+    my %map = (
+        'audio/flac'             => 'flc',
+        'audio/x-flac'           => 'flc',
+        'audio/mpeg'             => 'mp3',
+        'audio/mp3'              => 'mp3',
+        'audio/mp4'              => 'aac',
+        'audio/aac'              => 'aac',
+        'audio/aacp'             => 'aac',
+        'audio/x-aac'            => 'aac',
+        'audio/ogg'              => 'ogg',
+        'audio/opus'             => 'ogg',   # LMS treats opus in ogg as ogg
+        'audio/wav'              => 'wav',
+        'audio/x-wav'            => 'wav',
+        'audio/x-ms-wma'         => 'wma',
+        'audio/x-ms-wax'         => 'wma',
+        'audio/x-matroska'       => 'mka',
+        'audio/webm'             => 'webm',
+        'audio/alac'             => 'alc',
+        'audio/x-alac'           => 'alc',
+    );
+
+    # Return known format, or fall back to something generic
+    return $map{$content_type} || 'mp3';
 }
 
 1;
