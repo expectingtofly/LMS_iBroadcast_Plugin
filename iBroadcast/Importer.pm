@@ -133,7 +133,7 @@ sub scanArtists {
 	foreach my $artist_id (@artist_ids) {
 		my $artist = $artists->{$artist_id};	
 
-		if (scalar @{$artist->[$map->{tracks}]}) {  #only add artists if they have tracks
+		if ($artist->[$map->{icatid}]) {  #only add artists if they have albums/tracks
 			main::DEBUGLOG && $log->is_debug && $log->debug("Artist" . Dumper($artist) );	
 			$progress->update($artist->[$map->{name}] || 'Unknown Artist');
 			Slim::Schema::Contributor->add({
@@ -163,6 +163,10 @@ sub scanAlbum {
 			'every' => 1,
 		});
 	}
+
+	my $albumartistId = $album->[$albumMap->{artist_id}];
+	my $albumartist = $library->{library}->{artists}->{$albumartistId};
+	my $albumartistName = $albumartist ? $albumartist->[$library->{library}->{artists}->{map}->{name}] : string('VARIOUSARTISTS');
 
 	main::INFOLOG && $log->is_info && $log->info("Reading tracks...");	
 
@@ -194,7 +198,7 @@ sub scanAlbum {
 
 		}
 
-		push @$preparedTracks, _prepareTrack($trackid, $library->{library}->{tracks}->{$trackid},  $library->{library}->{tracks}->{map}, $album->[$albumMap->{name}], $artistName,  $album->[$albumMap->{disc}], $composer, $tagArr);
+		push @$preparedTracks, _prepareTrack($trackid, $library->{library}->{tracks}->{$trackid},  $library->{library}->{tracks}->{map}, $album->[$albumMap->{name}], $artistName,  $album->[$albumMap->{disc}], $composer, $tagArr, $albumartistId, $albumartistName);
 
 	}
 	main::DEBUGLOG && $log->is_debug && $log->debug("Prepared " . scalar(@$preparedTracks) . " tracks for album " . $album->[$albumMap->{name}] );
@@ -204,7 +208,7 @@ sub scanAlbum {
 }
 
 sub _prepareTrack {
-	my ($trackid, $track, $map, $albumName, $artistName, $disc, $composer, $tagArr) = @_;
+	my ($trackid, $track, $map, $albumName, $artistName, $disc, $composer, $tagArr, $albumartistId, $albumartistName) = @_;
 
 	my $splitChar = substr(preferences('server')->get('splitList'), 0, 1);
 
@@ -218,8 +222,9 @@ sub _prepareTrack {
 		url          => $url,
 		TITLE        => $track->[$map->{title}],
 		ARTIST       => $artistName,
-		ARTIST_EXTID => 'ibcst:artist:' .$track->[$map->{artist_id}],	
-		TRACKARTIST  => $artistName,
+		ARTIST_EXTID => 'ibcst:artist:' . $track->[$map->{artist_id}],	
+		ALBUMARTIST  => $albumartistName,
+		ALBUMARTIST_EXTID => 'ibcst:artist:' . $albumartistId,
 		ALBUM        => $albumName,		
 		ALBUM_EXTID  => 'ibcst:album:' . $track->[$map->{album_id}],
 		TRACKNUM     => $track->[$map->{track}],	
